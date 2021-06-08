@@ -54,22 +54,25 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  EditorJSView? editorJSView;
+  late EditorJSView editorJSView;
 
   @override
   void initState() {
     super.initState();
-    fetchTestData();
   }
 
-  void fetchTestData() async {
-    String data = await DefaultAssetBundle.of(context).loadString("test_data/editorjsdatatest.json");
-    String styles = await DefaultAssetBundle.of(context).loadString("test_data/editorjsstyles.json");
+  Future<bool> fetchTestData() async {
+    try {
+      String data = await DefaultAssetBundle.of(context).loadString("test_data/editorjsdatatest.json");
+      String styles = await DefaultAssetBundle.of(context).loadString("test_data/editorjsstyles.json");
 
-    setState(() {
-      editorJSView = EditorJSView(editorJSData: data, styles: styles);
-    });
+      setState(() {
+        editorJSView = EditorJSView(editorJSData: data, styles: styles);
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   void _showEditor() {
@@ -79,22 +82,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            (editorJSView != null) ? editorJSView! : Text("Please wait..."),
+            FutureBuilder<bool>(
+              future: fetchTestData(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  print(1);
+                  print(snapshot.data);
+                  return snapshot.data! ? editorJSView : Container();
+                }
+                print(2);
+                return Container();
+              },
+            ),
           ],
         ),
       ),

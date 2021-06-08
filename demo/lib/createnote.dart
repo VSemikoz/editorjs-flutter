@@ -1,6 +1,8 @@
 import 'package:editorjs_flutter/editorjs_flutter.dart';
 import 'package:flutter/material.dart';
 
+import 'main.dart';
+
 class CreateNoteLayout extends StatefulWidget {
   @override
   CreateNoteLayoutState createState() => CreateNoteLayoutState();
@@ -27,10 +29,10 @@ class CreateNoteLayoutState extends State<CreateNoteLayout> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              // Navigator.push(
-              //   context,
-              // MaterialPageRoute(builder: (context) => MyHomePage(title: 'Flutter Demo Home Page')),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyHomePage(title: 'Flutter Demo Home Page')),
+              );
             },
           ),
         ),

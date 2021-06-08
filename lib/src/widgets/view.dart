@@ -9,9 +9,9 @@ import 'package:flutter_html/style.dart';
 
 class EditorJSView extends StatefulWidget {
   final String editorJSData;
-  final String styles;
+  final String? styles;
 
-  const EditorJSView({Key? key, required this.editorJSData, required this.styles}) : super(key: key);
+  const EditorJSView({Key? key, required this.editorJSData, this.styles}) : super(key: key);
 
   @override
   EditorJSViewState createState() => EditorJSViewState();
@@ -20,9 +20,9 @@ class EditorJSView extends StatefulWidget {
 class EditorJSViewState extends State<EditorJSView> {
   late String data;
   late EditorJSData dataObject;
-  late EditorJSViewStyles styles;
+  EditorJSViewStyles? styles;
   List<Widget> items = [];
-  late Map<String, Style> customStyleMap;
+  Map<String, Style>? customStyleMap;
 
   @override
   void initState() {
@@ -30,9 +30,12 @@ class EditorJSViewState extends State<EditorJSView> {
 
     setState(() {
       dataObject = EditorJSData.fromJson(jsonDecode(widget.editorJSData));
-      styles = EditorJSViewStyles.fromJson(jsonDecode(widget.styles));
-
-      customStyleMap = generateStylemap(styles.cssTags);
+      if (widget.styles != null) {
+        styles = EditorJSViewStyles.fromJson(jsonDecode(widget.styles!));
+        if (styles!.cssTags != null) {
+          customStyleMap = generateStylemap(styles!.cssTags!);
+        }
+      }
 
       dataObject.blocks.forEach((element) {
         double levelFontSize = 16;
@@ -62,49 +65,51 @@ class EditorJSViewState extends State<EditorJSView> {
           case "header":
             items.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
-                element.data.text,
+                element.data.text ?? " ",
                 style: TextStyle(
                     fontSize: levelFontSize,
-                    fontWeight: (element.data.level <= 3) ? FontWeight.bold : FontWeight.normal),
+                    fontWeight: (element.data.level != null && element.data.level! <= 3)
+                        ? FontWeight.bold
+                        : FontWeight.normal),
               )
             ]));
             break;
           case "paragraph":
             items.add(Html(
               data: element.data.text,
-              style: customStyleMap,
+              style: customStyleMap ?? {},
             ));
             break;
           case "list":
             String bullet = "\u2022 ";
-            String style = element.data.style;
+            String style = element.data.style ?? "";
             int counter = 1;
-
-            element.data.items.forEach((element) {
-              if (style == 'ordered') {
-                bullet = counter.toString();
-                items.add(
-                  Row(children: [
-                    Container(
-                        child: Html(
-                      data: bullet + element,
-                      style: customStyleMap,
-                    ))
-                  ]),
-                );
-                counter++;
-              } else {
-                items.add(
-                  Row(children: [
-                    Container(
-                        child: Html(
-                      data: bullet + element,
-                      style: customStyleMap,
-                    ))
-                  ]),
-                );
-              }
-            });
+            if (element.data.items != null)
+              element.data.items!.forEach((element) {
+                if (style == 'ordered') {
+                  bullet = counter.toString();
+                  items.add(
+                    Row(children: [
+                      Container(
+                          child: Html(
+                        data: bullet + element,
+                        style: customStyleMap ?? {},
+                      ))
+                    ]),
+                  );
+                  counter++;
+                } else {
+                  items.add(
+                    Row(children: [
+                      Container(
+                          child: Html(
+                        data: bullet + element,
+                        style: customStyleMap ?? {},
+                      ))
+                    ]),
+                  );
+                }
+              });
             break;
           case "delimiter":
             items.add(Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
