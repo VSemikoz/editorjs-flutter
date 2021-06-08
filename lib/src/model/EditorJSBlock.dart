@@ -4,12 +4,9 @@ class EditorJSBlock {
   final String type;
   final EditorJSBlockData data;
 
-  EditorJSBlock({this.type, this.data});
+  EditorJSBlock({required this.type, required this.data});
 
   factory EditorJSBlock.fromJson(Map<String, dynamic> parsedJson) {
-    return EditorJSBlock(
-      data: EditorJSBlockData.fromJson(parsedJson['data']), 
-      type: parsedJson['type']
-    );
+    return EditorJSBlock(data: EditorJSBlockData.fromJson(parsedJson['data']), type: parsedJson['type']);
   }
 }

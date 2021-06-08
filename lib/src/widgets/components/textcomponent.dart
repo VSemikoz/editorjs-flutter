@@ -1,20 +1,16 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-class TextComponent {
+abstract class TextComponent {
   static Widget addText() {
     return Flexible(
-      child: TextField(
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: ""
-        ),
-        keyboardType: TextInputType.multiline,
-        minLines: 1,
-        maxLines: null,
-      )
-    );
+        child: TextField(
+      decoration: InputDecoration(border: InputBorder.none, hintText: ""),
+      keyboardType: TextInputType.multiline,
+      minLines: 1,
+      maxLines: null,
+    ));
   }
 
-  static Widget addHeader() {}
+  static Widget? addHeader() {}
 }

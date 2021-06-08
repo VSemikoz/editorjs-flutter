@@ -2,9 +2,9 @@ import 'package:editorjs_flutter/src/model/EditorJSCSSTag.dart';
 
 class EditorJSViewStyles {
   final List<EditorJSCSSTag> cssTags;
-  final String defaultFont;
+  final String? defaultFont;
 
-  EditorJSViewStyles({this.cssTags, this.defaultFont});
+  EditorJSViewStyles({required this.cssTags, this.defaultFont});
 
   factory EditorJSViewStyles.fromJson(Map<String, dynamic> parsedJson) {
     var listTags = parsedJson['cssTags'] as List;

@@ -1,6 +1,8 @@
 import 'package:editorjs_flutter/editorjs_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:demo/createnote.dart';
+
+import 'createnote.dart';
+// import 'package:demo/createnote.dart';
 
 void main() {
   runApp(MyApp());
@@ -34,7 +36,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -53,7 +55,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  EditorJSView editorJSView;
+  EditorJSView? editorJSView;
 
   @override
   void initState() {
@@ -71,11 +73,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _showEditor() {
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-            builder: (BuildContext context) => CreateNoteLayout()
-        )
-    );
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (BuildContext context) => CreateNoteLayout()));
   }
 
   @override
@@ -93,9 +92,11 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: SingleChildScrollView(
-          child: Column(children: [
-            (editorJSView != null) ? editorJSView : Text("Please wait...")
-          ],)
+        child: Column(
+          children: [
+            (editorJSView != null) ? editorJSView! : Text("Please wait..."),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showEditor,
